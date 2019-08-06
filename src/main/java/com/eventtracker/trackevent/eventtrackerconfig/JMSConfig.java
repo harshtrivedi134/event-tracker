@@ -30,7 +30,10 @@ public class JMSConfig {
         MappingJackson2MessageConverter messageConverter =  new MappingJackson2MessageConverter();
         messageConverter.setObjectMapper(objectMapper);
         messageConverter.setTargetType(MessageType.TEXT);
-        messageConverter.setTypeIdPropertyName("SendMessageRequest");
+        messageConverter.setTypeIdPropertyName("_type");
+//        Map<String,Class<?>> typeIdMappings = new HashMap<>();
+//        typeIdMappings.put(SendEventMessageRequest.class.getName(), SendEventMessageRequest.class);
+//        messageConverter.setTypeIdMappings(typeIdMappings);
 
         return messageConverter;
     }
