@@ -5,6 +5,9 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,15 +21,15 @@ import javax.validation.Valid;
 @RequestMapping("/track/event/")
 public class EventTrackerController {
 
-
     private final JmsTemplate jmsTemplate;
+    private static Logger log = LoggerFactory.getLogger(EventTrackerController.class);
 
     EventTrackerController(JmsTemplate jmsTemplate) {
         this.jmsTemplate = jmsTemplate;
     }
 
-    @ApiOperation(value= "Post the message to the queue")
-    @PostMapping("/{user_id}")
+    @ApiOperation(value = "Post the message to the queue")
+    @PostMapping("/")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully sent message to the queue"),
             @ApiResponse(code = 404, message = "Messaging service not found"),
@@ -34,15 +37,21 @@ public class EventTrackerController {
     })
     public void sendMessage(@Valid @RequestBody SendEventMessageRequest sendEventMessageRequest) throws Exception {
 
-        if(sendEventMessageRequest.getUserId() == "string" ||
-                sendEventMessageRequest.getEventType() == "string"){
-            //TODO: create more meaningful Exception
-            throw  new Exception("userId and eventType is required");
+        if ((StringUtils.isBlank(sendEventMessageRequest.getUserId())
+                || sendEventMessageRequest.getUserId().equals("string"))
+                ||
+                (StringUtils.isBlank(sendEventMessageRequest.getEventType())
+                        || sendEventMessageRequest.getEventType().equals("string"))) {
+
+            throw new Exception("userId and eventType is required");
 
         }
-        jmsTemplate.convertAndSend("EventTrackingQueue", sendEventMessageRequest);
+        try {
+            log.info("Sending message to queue");
+            jmsTemplate.convertAndSend("EventTrackingQueue", sendEventMessageRequest);
 
-
+        } catch (Exception e) {
+            log.error("Error sending message to the queue", e.getMessage());
+        }
     }
-
 }
