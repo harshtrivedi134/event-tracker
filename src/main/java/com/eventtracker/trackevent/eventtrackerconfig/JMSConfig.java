@@ -13,33 +13,18 @@ import org.springframework.jms.support.converter.MessageType;
 @EnableJms
 public class JMSConfig {
 
-//    @Bean
-//    public JmsListenerContainerFactory<?> jmsListenerContainerFactory(
-//            ConnectionFactory connectionFactory,
-//            //DefaultJmsListenerContainerFactory containerFactory,
-//
-//            DefaultJmsListenerContainerFactoryConfigurer configurer) {
-//
-//        DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
-//        configurer.configure(factory, connectionFactory);
-//        return  factory;
-//    }
-
     @Bean
     public MessageConverter messageConverter(ObjectMapper objectMapper) {
-        MappingJackson2MessageConverter messageConverter =  new MappingJackson2MessageConverter();
+        MappingJackson2MessageConverter messageConverter = new MappingJackson2MessageConverter();
         messageConverter.setObjectMapper(objectMapper);
         messageConverter.setTargetType(MessageType.TEXT);
         messageConverter.setTypeIdPropertyName("_type");
-//        Map<String,Class<?>> typeIdMappings = new HashMap<>();
-//        typeIdMappings.put(SendEventMessageRequest.class.getName(), SendEventMessageRequest.class);
-//        messageConverter.setTypeIdMappings(typeIdMappings);
 
         return messageConverter;
     }
 
     @Bean
     public DefaultJmsListenerContainerFactory defaultJmsListenerContainerFactory() {
-        return  new DefaultJmsListenerContainerFactory();
+        return new DefaultJmsListenerContainerFactory();
     }
 }
