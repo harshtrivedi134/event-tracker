@@ -45,6 +45,11 @@ This will start the event tracker application/microservice which pushes event to
 15. Check ActiveMq web cosole the pending message should be consumed.
   
 16. Check `event` table ----> the message will be peristed. 
+  
+
+Message redelivery option configured in  parent project `event-tracker` > `application.properties` (`maximumRedeliveries=1`).
+  
+
 
 
 
