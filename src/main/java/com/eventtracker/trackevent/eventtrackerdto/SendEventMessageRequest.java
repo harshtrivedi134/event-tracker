@@ -10,13 +10,10 @@ public class SendEventMessageRequest {
 
     @NotNull
     private String userId;
-
     private ZonedDateTime timestamp;
 
     @NotNull
     private String eventType;
-
     private String deviceId;
-
     private String agent;
 }
